@@ -2,7 +2,7 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy import text
 from sqlalchemy.orm import Session
-from app.routers import usuarios
+from app.routers import usuarios, auth
 from app.config.database import get_db
 
 app = FastAPI(
@@ -12,6 +12,7 @@ app = FastAPI(
 )
 
 app.include_router(usuarios.router)
+app.include_router(auth.router)
 
 @app.get("/")
 def inicio():

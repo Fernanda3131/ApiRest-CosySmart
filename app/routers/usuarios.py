@@ -11,6 +11,7 @@ from app.schemas.usuario import (
     UsuarioRespuesta,
     UsuarioActualizar
 )
+from app.dependencies import obtener_usuario_actual
 
 
 router = APIRouter(
@@ -75,8 +76,10 @@ def crear_usuario(
 
 # LISTAR USUARIOS ACTIVOS
 @router.get("/", response_model=list[UsuarioRespuesta])
-def listar_usuarios(db: Session = Depends(get_db)):
-
+def listar_usuarios(
+    usuario_actual=Depends(obtener_usuario_actual),
+    db: Session = Depends(get_db)
+):
     usuarios = db.query(Usuario).filter(
         Usuario.Estado == "ACTIVO"
     ).order_by(
@@ -90,8 +93,15 @@ def listar_usuarios(db: Session = Depends(get_db)):
 @router.get("/{id_usuario}", response_model=UsuarioRespuesta)
 def consultar_usuario(
     id_usuario: int,
+    usuario_actual=Depends(obtener_usuario_actual),
     db: Session = Depends(get_db)
 ):
+    if usuario_actual.IdUsuario != id_usuario:
+        raise HTTPException(
+            status_code=403,
+            detail="No tienes permiso para consultar este usuario"
+        )
+
     usuario = db.query(Usuario).filter(
         Usuario.IdUsuario == id_usuario,
         Usuario.Estado == "ACTIVO"
@@ -111,8 +121,15 @@ def consultar_usuario(
 def actualizar_usuario(
     id_usuario: int,
     datos: UsuarioActualizar,
+    usuario_actual=Depends(obtener_usuario_actual),
     db: Session = Depends(get_db)
 ):
+    if usuario_actual.IdUsuario != id_usuario:
+        raise HTTPException(
+            status_code=403,
+            detail="No tienes permiso para modificar este usuario"
+        )
+
     usuario = db.query(Usuario).filter(
         Usuario.IdUsuario == id_usuario,
         Usuario.Estado == "ACTIVO"
@@ -161,8 +178,15 @@ def actualizar_usuario(
 @router.patch("/{id_usuario}/estado")
 def cambiar_estado_usuario(
     id_usuario: int,
+    usuario_actual=Depends(obtener_usuario_actual),
     db: Session = Depends(get_db)
 ):
+    if usuario_actual.IdUsuario != id_usuario:
+        raise HTTPException(
+            status_code=403,
+            detail="No tienes permiso para desactivar este usuario"
+        )
+
     usuario = db.query(Usuario).filter(
         Usuario.IdUsuario == id_usuario
     ).first()
