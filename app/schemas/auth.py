@@ -1,5 +1,5 @@
-
 from pydantic import BaseModel, EmailStr
+from typing import Optional
 
 
 class LoginRequest(BaseModel):
@@ -12,8 +12,9 @@ class UsuarioLoginRespuesta(BaseModel):
     Nombres: str
     Apellidos: str
     Correo: EmailStr
-    FotoPerfil: str | None = None
+    FotoPerfil: Optional[str] = None
     Estado: str
+    Rol: str
 
 
 class LoginRespuesta(BaseModel):

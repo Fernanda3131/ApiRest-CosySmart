@@ -1,13 +1,23 @@
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.config.database import get_db
-from app.schemas.auth import LoginRequest, LoginRespuesta
-from app.services.auth import autenticar_usuario
+
+from app.schemas.auth import (
+    LoginRequest,
+    LoginRespuesta,
+    UsuarioLoginRespuesta
+)
+
+from app.services.auth import (
+    autenticar_usuario,
+    obtener_rol_activo
+)
+
 from app.security import crear_access_token
 
 from app.dependencies import obtener_usuario_actual
-from app.schemas.auth import UsuarioLoginRespuesta
 
 
 router = APIRouter(
@@ -25,7 +35,7 @@ def iniciar_sesion(
     datos: LoginRequest,
     db: Session = Depends(get_db)
 ):
-    # Validar las credenciales
+
     usuario = autenticar_usuario(
         db=db,
         correo=datos.Correo,
@@ -38,10 +48,23 @@ def iniciar_sesion(
             detail="Correo electrónico o contraseña incorrectos"
         )
 
+    try:
+        rol = obtener_rol_activo(usuario)
+    except ValueError as error:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=str(error)
+        )
+
+    if not rol:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="El usuario no tiene un rol activo asignado"
+        )
+
     access_token = crear_access_token({
         "sub": str(usuario.IdUsuario)
     })
-
 
     return {
         "mensaje": "Inicio de sesión exitoso",
@@ -53,7 +76,8 @@ def iniciar_sesion(
             "Apellidos": usuario.Apellidos,
             "Correo": usuario.Correo,
             "FotoPerfil": usuario.FotoPerfil,
-            "Estado": usuario.Estado
+            "Estado": usuario.Estado,
+            "Rol": rol.Nombre
         }
     }
 
@@ -65,4 +89,27 @@ def iniciar_sesion(
 def consultar_usuario_autenticado(
     usuario=Depends(obtener_usuario_actual)
 ):
-    return usuario
+
+    try:
+        rol = obtener_rol_activo(usuario)
+    except ValueError as error:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=str(error)
+        )
+
+    if not rol:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="El usuario no tiene un rol activo asignado"
+        )
+
+    return {
+        "IdUsuario": usuario.IdUsuario,
+        "Nombres": usuario.Nombres,
+        "Apellidos": usuario.Apellidos,
+        "Correo": usuario.Correo,
+        "FotoPerfil": usuario.FotoPerfil,
+        "Estado": usuario.Estado,
+        "Rol": rol.Nombre
+    }

@@ -56,3 +56,30 @@ def obtener_usuario_actual(
         )
 
     return usuario
+
+def requiere_rol(*roles_permitidos: str):
+
+    def validar_rol(
+        usuario=Depends(obtener_usuario_actual)
+    ):
+        roles_usuario = [
+            asignacion.rol.Nombre
+            for asignacion in usuario.roles
+            if asignacion.rol is not None
+            and asignacion.rol.Estado is True
+        ]
+
+        tiene_permiso = any(
+            rol in roles_permitidos
+            for rol in roles_usuario
+        )
+
+        if not tiene_permiso:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="No tienes permisos para realizar esta operación"
+            )
+
+        return usuario
+
+    return validar_rol

@@ -2,8 +2,15 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy import text
 from sqlalchemy.orm import Session
+
 from app.routers import usuarios, auth
 from app.config.database import get_db
+
+# Registrar modelos para que SQLAlchemy conozca las relaciones
+from app.models.usuario import Usuario
+from app.models.rol import Rol
+from app.models.usuario_rol import UsuarioRol
+
 
 app = FastAPI(
     title="CosySmart API",
@@ -11,8 +18,11 @@ app = FastAPI(
     version="1.0.0"
 )
 
-app.include_router(usuarios.router)
+
+# Registrar routers
 app.include_router(auth.router)
+app.include_router(usuarios.router)
+
 
 @app.get("/")
 def inicio():
@@ -23,8 +33,9 @@ def inicio():
 
 
 @app.get("/conexion")
-def verificar_conexion(db: Session = Depends(get_db)):
-
+def verificar_conexion(
+    db: Session = Depends(get_db)
+):
     try:
         resultado = db.execute(
             text("SELECT DB_NAME() AS base_datos")
