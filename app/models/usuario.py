@@ -27,3 +27,7 @@ class Usuario(Base):
         "UsuarioRol",
         back_populates="usuario"
     )
+    dispositivos = relationship(
+    "DispositivoUsuario",
+    back_populates="usuario"
+)

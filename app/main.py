@@ -6,11 +6,11 @@ from sqlalchemy.orm import Session
 from app.routers import usuarios, auth
 from app.config.database import get_db
 
-# Registrar modelos para que SQLAlchemy conozca las relaciones
 from app.models.usuario import Usuario
 from app.models.rol import Rol
 from app.models.usuario_rol import UsuarioRol
 
+from app.routers import biometria
 
 app = FastAPI(
     title="CosySmart API",
@@ -19,9 +19,10 @@ app = FastAPI(
 )
 
 
-# Registrar routers
+
 app.include_router(auth.router)
 app.include_router(usuarios.router)
+app.include_router(biometria.router)
 
 
 @app.get("/")
