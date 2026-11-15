@@ -22,17 +22,23 @@ def autenticar_usuario(
             joinedload(Usuario.roles)
             .joinedload(UsuarioRol.rol)
         )
-        .filter(Usuario.Correo == correo)
+        .filter(Usuario.Correo == correo.strip())
         .first()
     )
 
-    if not usuario or usuario.Estado != "ACTIVO":
+    if not usuario:
         return None
 
-    contrasena_valida = pwd_context.verify(
-        contrasena,
-        usuario.Contrasena
-    )
+    if usuario.Estado != "ACTIVO":
+        return None
+
+    try:
+        contrasena_valida = pwd_context.verify(
+            contrasena,
+            usuario.Contrasena
+        )
+    except (TypeError, ValueError):
+        return None
 
     if not contrasena_valida:
         return None
@@ -41,6 +47,7 @@ def autenticar_usuario(
 
 
 def obtener_rol_activo(usuario: Usuario):
+
     roles_activos = [
         asignacion.rol
         for asignacion in usuario.roles
@@ -48,13 +55,36 @@ def obtener_rol_activo(usuario: Usuario):
         and asignacion.rol.Estado is True
     ]
 
-    if len(roles_activos) == 0:
-        return None
+    print(f"Usuario autenticado: {usuario.Correo}")
 
+    print(
+        "Roles encontrados:",
+        [
+            {
+                "IdRol": rol.IdRol,
+                "Nombre": rol.Nombre,
+                "Estado": rol.Estado
+            }
+            for rol in [
+                asignacion.rol
+                for asignacion in usuario.roles
+                if asignacion.rol is not None
+            ]
+        ]
+    )
+
+    print(
+        "Roles activos:",
+        [rol.Nombre for rol in roles_activos]
+    )
+
+    if not roles_activos:
+        return None
 
     if len(roles_activos) > 1:
         raise ValueError(
-            "El usuario tiene varios roles activos y debe definirse cuál utilizar"
+            "El usuario tiene varios roles activos. "
+            "Debe definirse cuál utilizar."
         )
 
     return roles_activos[0]

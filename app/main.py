@@ -9,7 +9,7 @@ from app.config.database import get_db
 from app.models.usuario import Usuario
 from app.models.rol import Rol
 from app.models.usuario_rol import UsuarioRol
-
+from app.routers import recuperacion
 from app.routers import biometria
 
 app = FastAPI(
@@ -19,10 +19,12 @@ app = FastAPI(
 )
 
 
-
+# Autenticación y Seguridad
 app.include_router(auth.router)
 app.include_router(usuarios.router)
 app.include_router(biometria.router)
+app.include_router(recuperacion.router)
+
 
 
 @app.get("/")

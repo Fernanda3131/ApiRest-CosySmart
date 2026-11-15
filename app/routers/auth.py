@@ -1,3 +1,4 @@
+import logging
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
@@ -20,10 +21,35 @@ from app.security import crear_access_token
 from app.dependencies import obtener_usuario_actual
 
 
+logger = logging.getLogger(__name__)
+
+
 router = APIRouter(
     prefix="/auth",
     tags=["Autenticación"]
 )
+
+
+def diagnosticar_roles(usuario):
+    """
+    Registra los roles asignados al usuario y su estado.
+    """
+
+    logger.warning(
+        "Diagnóstico de roles para usuario: %s",
+        usuario.Correo
+    )
+
+    for asignacion in usuario.roles:
+
+        rol = asignacion.rol
+
+        logger.warning(
+            "IdRol: %s | Nombre: %s | Estado: %s",
+            asignacion.IdRol,
+            rol.Nombre if rol else None,
+            rol.Estado if rol else None
+        )
 
 
 @router.post(
@@ -50,13 +76,22 @@ def iniciar_sesion(
 
     try:
         rol = obtener_rol_activo(usuario)
+
     except ValueError as error:
+        logger.error(
+            "Error de roles para %s: %s",
+            usuario.Correo,
+            str(error)
+        )
+
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail=str(error)
         )
 
     if not rol:
+        diagnosticar_roles(usuario)
+
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="El usuario no tiene un rol activo asignado"
@@ -65,6 +100,12 @@ def iniciar_sesion(
     access_token = crear_access_token({
         "sub": str(usuario.IdUsuario)
     })
+
+    logger.info(
+        "Login exitoso: %s | Rol: %s",
+        usuario.Correo,
+        rol.Nombre
+    )
 
     return {
         "mensaje": "Inicio de sesión exitoso",
@@ -92,13 +133,22 @@ def consultar_usuario_autenticado(
 
     try:
         rol = obtener_rol_activo(usuario)
+
     except ValueError as error:
+        logger.error(
+            "Error de roles en /me para %s: %s",
+            usuario.Correo,
+            str(error)
+        )
+
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail=str(error)
         )
 
     if not rol:
+        diagnosticar_roles(usuario)
+
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="El usuario no tiene un rol activo asignado"
