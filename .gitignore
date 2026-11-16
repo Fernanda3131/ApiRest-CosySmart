@@ -60,3 +60,4 @@ clave_privada_biometrica.pem
 
 aiosmtplib
 python-dotenv
+app/uploads/
