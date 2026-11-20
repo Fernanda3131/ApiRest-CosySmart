@@ -18,6 +18,8 @@ from sqlalchemy.orm import relationship
 from app.config.database import Base
 
 
+# Modelo asociado a los dispositivos registrados para permitir autenticación biometrica
+
 class DispositivoUsuario(Base):
     __tablename__ = "DispositivosUsuario"
 

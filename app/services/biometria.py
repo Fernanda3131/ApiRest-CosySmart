@@ -18,6 +18,21 @@ from fastapi import HTTPException, status
 from app.models.dispositivo_usuario import DispositivoUsuario
 from app.models.desafio_biometrico import DesafioBiometrico
 
+"""Descripción:
+    Implementa la lógica de negocio del proceso de
+    autenticación biométrica de CosySmart mediante
+    desafíos criptográficos y verificación de firmas.
+
+Responsabilidades:
+    - Gestionar el registro de dispositivos.
+    - Generar desafíos criptográficos para autenticación.
+    - Crear nonces aleatorios y controlar su vigencia.
+    - Construir o verificar el mensaje canónico del desafío.
+    - Validar firmas digitales mediante ECDSA P-256 y SHA-256.
+    - Controlar la vigencia y el uso de los desafíos.
+    - Gestionar la revocación de credenciales biométricas.
+"""
+
 
 ALGORITMO_PERMITIDO = "ECDSA-P256-SHA256"
 DURACION_DESAFIO_MINUTOS = 2

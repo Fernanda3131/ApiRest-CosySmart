@@ -3,6 +3,7 @@ from sqlalchemy.orm import relationship
 
 from app.config.database import Base
 
+# Modelo asociado con datos de usuario
 
 class Usuario(Base):
     __tablename__ = "Usuarios"
@@ -28,6 +29,10 @@ class Usuario(Base):
         back_populates="usuario"
     )
     dispositivos = relationship(
-    "DispositivoUsuario",
-    back_populates="usuario"
-)
+        "DispositivoUsuario",
+        back_populates="usuario"
+    )
+    ordenes = relationship(
+        "Orden",
+        back_populates="usuario"
+    )

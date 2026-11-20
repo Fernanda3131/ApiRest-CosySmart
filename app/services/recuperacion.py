@@ -6,6 +6,23 @@ import secrets
 
 from datetime import datetime, timedelta, timezone
 
+"""
+Descripción:
+    Gestiona la lógica de recuperación y restablecimiento
+    de contraseñas de los usuarios de CosySmart.
+
+Responsabilidades:
+    - Procesar solicitudes de recuperación de contraseña.
+    - Verificar la existencia y elegibilidad de la cuenta.
+    - Generar mecanismos temporales de verificación,
+      cuando corresponda.
+    - Validar códigos o tokens de recuperación.
+    - Controlar la vigencia y el uso de los mecanismos
+      de recuperación.
+    - Actualizar la contraseña del usuario.
+    - Aplicar hashing seguro antes de almacenar
+      la nueva contraseña."""
+
 
 def obtener_secreto():
     secreto = os.getenv("RESET_CODE_SECRET")

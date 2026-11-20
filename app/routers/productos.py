@@ -28,6 +28,7 @@ from app.models.producto import Producto
 from app.models.producto_imagen import ProductoImagen
 from app.models.categoria import Categoria
 
+# Administrador de rutas de modulos productos
 
 logger = logging.getLogger(__name__)
 
@@ -64,9 +65,7 @@ UNIDADES_PESO = {
 }
 
 
-# ============================================================
 # FUNCIONES AUXILIARES
-# ============================================================
 
 def detectar_tipo_imagen(contenido: bytes):
     if contenido.startswith(b"\xff\xd8\xff"):
@@ -1067,3 +1066,51 @@ def cambiar_estado_producto(
             status_code=500,
             detail="No fue posible cambiar el estado del producto"
         )
+
+@router.get("/{id_producto}")
+def obtener_producto_por_id(
+    id_producto: int,
+    db: Session = Depends(get_db)
+):
+    producto = (
+        db.query(Producto)
+        .options(
+            joinedload(Producto.categoria),
+            selectinload(Producto.imagenes)
+        )
+        .filter(Producto.IdProducto == id_producto)
+        .first()
+    )
+
+    if not producto:
+        raise HTTPException(
+            status_code=404,
+            detail="Producto no encontrado"
+        )
+
+    return {
+        "IdProducto": producto.IdProducto,
+        "IdVendedor": producto.IdVendedor,
+        "IdCategoria": producto.IdCategoria,
+        "NombreCategoria": (
+            producto.categoria.Nombre
+            if producto.categoria else None
+        ),
+        "Nombre": producto.Nombre,
+        "Descripcion": producto.Descripcion,
+        "Precio": producto.Precio,
+        "Peso": producto.Peso,
+        "UnidadPeso": producto.UnidadPeso,
+        "Alto": producto.Alto,
+        "Ancho": producto.Ancho,
+        "Profundidad": producto.Profundidad,
+        "Color": producto.Color,
+        "Stock": producto.Stock,
+        "Estado": producto.Estado,
+        "imagenes": [
+            imagen.RutaImagen
+            for imagen in producto.imagenes
+        ]
+    }
+
+    

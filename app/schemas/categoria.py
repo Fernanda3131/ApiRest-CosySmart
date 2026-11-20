@@ -1,5 +1,6 @@
 from pydantic import BaseModel, ConfigDict
 
+#  Define los esquemas de validación y serialización de categorias de productos
 
 class CategoriaRespuesta(BaseModel):
     IdCategoria: int

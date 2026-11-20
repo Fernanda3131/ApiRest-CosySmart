@@ -12,6 +12,7 @@ router = APIRouter(
     tags=["Categorías"]
 )
 
+# Administrador de rutas de modulos de categoria
 
 @router.get("/", response_model=list[CategoriaRespuesta])
 def listar_categorias(

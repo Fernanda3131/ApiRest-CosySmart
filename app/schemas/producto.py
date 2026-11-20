@@ -2,6 +2,8 @@
 from decimal import Decimal
 from pydantic import BaseModel, Field, ConfigDict
 
+#  Define los esquemas de validación y serialización de prodcutos
+
 
 class ProductoRespuesta(BaseModel):
     IdProducto: int

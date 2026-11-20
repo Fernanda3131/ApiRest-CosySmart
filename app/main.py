@@ -13,11 +13,18 @@ from app.config.database import get_db
 from app.models.usuario import Usuario
 from app.models.rol import Rol
 from app.models.usuario_rol import UsuarioRol
+from app.models.orden import Orden
+from app.models.detalle_orden import DetalleOrden
+from app.models.despacho_orden import DespachoOrden
+from app.models.pago_orden import PagoOrden
 
 from app.routers import recuperacion
 from app.routers import biometria
 from app.routers import productos
 from app.routers import categorias
+from app.routers import carrito
+from app.routers import ordenes
+from app.routers import pagos
 
 
 app = FastAPI(
@@ -37,6 +44,9 @@ app.include_router(biometria.router)
 app.include_router(recuperacion.router)
 app.include_router(productos.router)
 app.include_router(categorias.router)
+app.include_router(carrito.router)
+app.include_router(ordenes.router)
+app.include_router(pagos.router)
 
 def custom_openapi():
     if app.openapi_schema:

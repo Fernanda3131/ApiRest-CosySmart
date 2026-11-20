@@ -4,6 +4,7 @@ from sqlalchemy.orm import relationship
 
 from app.config.database import Base
 
+# Modelo informativo de Producto
 
 class Producto(Base):
     __tablename__ = "Productos"

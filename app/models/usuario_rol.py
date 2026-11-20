@@ -3,6 +3,7 @@ from sqlalchemy.orm import relationship
 
 from app.config.database import Base
 
+# Modelo asociando el usuario y su rol correpondiente
 
 class UsuarioRol(Base):
     __tablename__ = "UsuarioRoles"

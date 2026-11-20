@@ -5,6 +5,8 @@ from sqlalchemy.orm import relationship
 from app.config.database import Base
 
 
+# Modelo de las imagenes asociadas a un producto en catalogo
+
 class ProductoImagen(Base):
     __tablename__ = "ProductoImagenes"
 

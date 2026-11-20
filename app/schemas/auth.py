@@ -1,6 +1,7 @@
 from pydantic import BaseModel, EmailStr
 from typing import Optional
 
+ # Define los esquemas de validación y serialización de autenticación
 
 class LoginRequest(BaseModel):
     Correo: EmailStr

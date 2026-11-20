@@ -16,6 +16,7 @@ from sqlalchemy.orm import relationship
 
 from app.config.database import Base
 
+# Modelo asociado a la creación de desafios biometricos, para un flujo correcto de autenticación
 
 class DesafioBiometrico(Base):
     __tablename__ = "DesafiosBiometricos"

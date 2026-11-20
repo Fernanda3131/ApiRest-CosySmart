@@ -4,6 +4,22 @@ import os
 from email.message import EmailMessage
 from aiosmtplib import send
 
+"""Descripción:
+    Centraliza las operaciones de envío de correos
+    electrónicos utilizadas por CosySmart.
+
+Responsabilidades:
+    - Preparar el contenido de los mensajes.
+    - Configurar los datos del destinatario.
+    - Gestionar el envío de correos electrónicos.
+    - Procesar errores durante la comunicación con
+      el servidor de correo.
+    - Mantener separada la lógica de correo de los routers.
+
+Configuración:
+    Los datos de conexión y las credenciales del servidor
+    de correo deben obtenerse de variables de entorno."""
+
 
 async def enviar_codigo_recuperacion(
     destinatario: str,

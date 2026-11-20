@@ -23,6 +23,7 @@ from app.dependencies import obtener_usuario_actual
 
 logger = logging.getLogger(__name__)
 
+# Administrador de rutas para el modulo de autenticación
 
 router = APIRouter(
     prefix="/auth",
@@ -52,6 +53,7 @@ def diagnosticar_roles(usuario):
         )
 
 
+# Inicio de sesión
 @router.post(
     "/login",
     response_model=LoginRespuesta,
@@ -122,6 +124,7 @@ def iniciar_sesion(
         }
     }
 
+# Consultar usuario autenticado
 
 @router.get(
     "/me",

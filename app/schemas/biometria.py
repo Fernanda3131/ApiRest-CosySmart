@@ -4,6 +4,7 @@ from typing import Optional
 from datetime import datetime
 from uuid import UUID
 
+#  Define los esquemas de validación y serialización de biometrica
 
 class DispositivoRegistrar(BaseModel):
     NombreDispositivo: str = Field(

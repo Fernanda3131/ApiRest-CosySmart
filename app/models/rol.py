@@ -3,6 +3,7 @@ from sqlalchemy.orm import relationship
 
 from app.config.database import Base
 
+# Información de roles de usuarios
 
 class Rol(Base):
     __tablename__ = "Roles"

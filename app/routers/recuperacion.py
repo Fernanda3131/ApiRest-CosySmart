@@ -31,6 +31,8 @@ from app.services.auth import pwd_context
 
 logger = logging.getLogger(__name__)
 
+# Administrador de ruta modulo recuperación de contraseña
+
 router = APIRouter(
     prefix="/auth",
     tags=["Recuperación de contraseña"]

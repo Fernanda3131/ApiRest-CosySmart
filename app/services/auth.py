@@ -4,6 +4,17 @@ from passlib.context import CryptContext
 from app.models.usuario import Usuario
 from app.models.usuario_rol import UsuarioRol
 
+""" Descripción:
+    Gestiona la lógica de autenticación de los usuarios
+    de CosySmart mediante validación de credenciales y
+    mecanismos de seguridad basados en JWT.
+
+Responsabilidades:
+    - Validar las credenciales proporcionadas por el usuario.
+    - Verificar las contraseñas almacenadas mediante bcrypt.
+    - Gestionar la autenticación de los usuarios.
+    - Generar tokens JWT cuando la autenticación es exitosa.
+    - Aplicar las validaciones necesarias para el acceso. """
 
 pwd_context = CryptContext(
     schemes=["bcrypt"],

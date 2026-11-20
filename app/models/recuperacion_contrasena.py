@@ -10,6 +10,7 @@ from sqlalchemy import (
 
 from app.config.database import Base
 
+# Modelo datos solicitado para recuperar contraseña
 
 class RecuperacionContrasena(Base):
 

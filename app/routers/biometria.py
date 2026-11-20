@@ -30,6 +30,8 @@ from app.security import crear_access_token
 from app.dependencies import obtener_usuario_actual
 
 
+# Administrador de rutas del modulo de biometrica
+
 router = APIRouter(
     prefix="/biometria",
     tags=["Biometría"]
@@ -50,7 +52,7 @@ def obtener_usuario_por_correo(db: Session, correo: str):
         .first()
     )
 
-
+ # Obtener dispositivos asociados 
 @router.post(
     "/dispositivos",
     response_model=DispositivoRespuesta,

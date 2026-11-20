@@ -39,7 +39,7 @@ from app.schemas.usuario import (
 from app.services.auth import pwd_context
 from app.dependencies import requiere_rol, obtener_usuario_actual
 
-
+# Administrar rutas de modulo de usuario
 logger = logging.getLogger(__name__)
 
 router = APIRouter(
@@ -47,10 +47,7 @@ router = APIRouter(
     tags=["Usuarios"]
 )
 
-
-# ==========================================================
 # CONFIGURACIÓN DE FOTOGRAFÍAS
-# ==========================================================
 
 DIRECTORIO_FOTOS = (
     Path(__file__).resolve().parents[1]
@@ -78,10 +75,7 @@ FORMATOS_IMAGEN = {
     }
 }
 
-
-# ==========================================================
 # FUNCIONES AUXILIARES
-# ==========================================================
 
 def obtener_fecha_actual():
     """
@@ -232,12 +226,6 @@ def contar_administradores_activos(db: Session) -> int:
         .count()
     )
 
-
-# ==========================================================
-# 1. REGISTRO PÚBLICO DE COMPRADORES
-# POST /usuarios/
-# ==========================================================
-
 @router.post(
     "/",
     response_model=UsuarioCreadoRespuesta,
@@ -321,11 +309,7 @@ def registrar_usuario(
         "Mensaje": "Usuario registrado correctamente."
     }
 
-
-# ==========================================================
-# 2. LISTAR USUARIOS
-# GET /usuarios/
-# ==========================================================
+#  LISTAR USUARIOS
 
 @router.get(
     "/",
@@ -385,11 +369,8 @@ def listar_usuarios(
         for usuario in usuarios
     ]
 
+# CREAR USUARIO DESDE ADMINISTRADOR
 
-# ==========================================================
-# 3. CREAR USUARIO DESDE ADMINISTRADOR
-# POST /usuarios/admin
-# ==========================================================
 
 @router.post(
     "/admin",
@@ -457,11 +438,6 @@ def crear_usuario_admin(
     return construir_respuesta_admin(nuevo_usuario)
 
 
-# ==========================================================
-# 4. CONSULTAR USUARIO POR ID
-# GET /usuarios/{id_usuario}
-# ==========================================================
-
 @router.get(
     "/{id_usuario}",
     response_model=UsuarioAdminRespuesta
@@ -486,11 +462,7 @@ def obtener_usuario_admin(
 
     return construir_respuesta_admin(usuario)
 
-
-# ==========================================================
-# 5. ACTUALIZAR USUARIO Y ROLES
-# PUT /usuarios/{id_usuario}
-# ==========================================================
+# ACTUALIZAR USUARIO Y ROLES
 
 @router.put(
     "/{id_usuario}",
@@ -618,11 +590,6 @@ def actualizar_usuario_admin(
     return construir_respuesta_admin(usuario)
 
 
-# ==========================================================
-# 6. DESACTIVAR USUARIO
-# DELETE /usuarios/{id_usuario}
-# ==========================================================
-
 @router.delete(
     "/{id_usuario}",
     response_model=UsuarioAdminMensajeRespuesta
@@ -695,11 +662,6 @@ def desactivar_usuario_admin(
         "Mensaje": "Usuario desactivado correctamente."
     }
 
-
-# ==========================================================
-# 7. ACTUALIZAR FOTO DE PERFIL DEL USUARIO AUTENTICADO
-# PUT /usuarios/me/foto
-# ==========================================================
 
 @router.put("/me/foto")
 def actualizar_foto_perfil(

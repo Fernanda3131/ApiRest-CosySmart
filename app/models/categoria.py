@@ -4,6 +4,7 @@ from sqlalchemy.orm import relationship
 
 from app.config.database import Base
 
+# Modelo de categorias asociadas a los productos
 
 class Categoria(Base):
     __tablename__ = "Categorias"

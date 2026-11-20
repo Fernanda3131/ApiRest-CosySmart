@@ -2,6 +2,8 @@ from pydantic import BaseModel, ConfigDict, EmailStr, Field
 from datetime import datetime
 from typing import Optional
 
+#  Define los esquemas de validación y serialización de usuario
+
 
 class UsuarioRegistroRequest(BaseModel):
     Nombres: str = Field(min_length=1, max_length=100)

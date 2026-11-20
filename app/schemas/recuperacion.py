@@ -1,6 +1,8 @@
 
 from pydantic import BaseModel, Field
 
+#  Define los esquemas de validación y serialización de recuperación de contraseña
+
 
 class SolicitudRecuperacion(BaseModel):
     correo: str = Field(min_length=5, max_length=150)
